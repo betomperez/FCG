@@ -1,37 +1,38 @@
-﻿namespace FCG.Tests.Domain.ValueObjects;
+﻿namespace FCG.Domain.ValueObjects;
 
 public class EmailTests
 {
-    [Fact]
-    public void Constructor_ValidAddress_CreatesEmail()
+    [Theory]
+    [InlineData("aluno@fiap.com.br")]
+    [InlineData("professor@pm3.com.br")]
+    [InlineData("user@alura.com.br")]
+    public void Constructor_ValidAddress_CreatesEmail(string validAddress)
     {
-        // Arrange
-
-        // Act
+        // Arrange & Act
+        Email email = new Email(validAddress);
 
         // Assert
-        Assert.Fail("This test has not been implemented yet.");
+        Assert.NotNull(email);
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    [InlineData("invalid-email")]
+    [InlineData("aluno@google.com.br")]
     public void Constructor_InvalidAdress_ThrowsArgumentException(string invalidEmail)
     {
-        // Arrange
-        // Act
-        // Assert
-        Assert.Fail("This test has not been implemented yet.");
+        // Arrange, Act &Assert
+        Assert.Throws<ArgumentException>(() => new Email(invalidEmail));
     }
 
     [Fact]
     public void ToString_ValidEmail_ReturnsEmailAddress()
     {
-        // Arrange
-        // Act
+        // Arrange & Act
+        Email email = new Email("aluno@fiap.com.br");
+
         // Assert
-        Assert.Fail("This test has not been implemented yet.");
+        Assert.Equal("aluno@fiap.com.br", email.ToString());
     }
 }

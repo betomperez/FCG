@@ -1,4 +1,6 @@
-﻿namespace FCG.Domain.ValueObjects;
+﻿using FCG.Domain.ValueObjects;
+
+namespace FCG.Domain.Tests.ValueObjects;
 
 public class EmailTests
 {

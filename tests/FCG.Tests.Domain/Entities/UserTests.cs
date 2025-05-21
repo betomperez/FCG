@@ -1,17 +1,24 @@
-﻿//using FCG.Domain.Entities;
+﻿using FCG.Domain.Entities;
+using FCG.Domain.Enums;
+using FCG.Domain.ValueObjects;
+using FCG.Tests.Domain.Mocks;
 
 namespace FCG.Tests.Domain.Entities;
 
 public class UserTests
 {
+    private readonly MockPasswordHasher _hasher = new();
+
     [Fact]
     public void Constructor_ValidName_CreatesUser()
     {
         // Arrange & act
-        // User user = new User("Maria Silva", "rm000000@fiap.com.br", "Senha@123");
+        var password = Password.Create("Senha@123", _hasher);
+        var email = new Email("rm000000@fiap.com.br");
+        var user = new User("Maria Silva", email, password);
 
         // Assert
-        Assert.Fail("Test not implemented");
+        Assert.NotNull(user);
     }
 
     [Theory]
@@ -21,79 +28,87 @@ public class UserTests
     public void Constructor_InvalidName_ThrowsException(string invalidName)
     {
         // Arrange, Act & Assert
-        //Assert.Throws<ArgumentException>(() => new User(invalidName, "rm000000@fiap.com.br", "Senha@123"));
-
-        Assert.Fail("Test not implemented");
+        var password = Password.Create("Senha@123", _hasher);
+        var email = new Email("rm000000@fiap.com.br");
+        Assert.Throws<ArgumentException>(() => new User(invalidName, email, password));
     }
 
     [Fact]
     public void Constructor_UserRoleIsUser_ReturnsTrue()
     {
         // Arrange, Act
-        //User user = new User("Maria Silva", "rm000000@fiap.com.br", "Senha@123");
+        var password = Password.Create("Senha@123", _hasher);
+        var email = new Email("rm000000@fiap.com.br");
+        var user = new User("Maria Silva", email, password);
 
         // Assert
-        //Assert.True(user.Role == UserRole.User);
-        Assert.Fail("Test not implemented");
+        Assert.True(user.Role == UserRole.User);
     }
 
     [Fact]
     public void ChangeRole_UserRoleChanged_RoleChanged()
     {
         // Arrange
-        //User user = new User("Maria Silva", "rm000000@fiap.com.br", "Senha@123");
-        //User admin = new User("José Santos" "professor@alura.com.br, "Pa$$w0rd", UserRole.Admin);
+        var password = Password.Create("Senha@123", _hasher);
+        var email = new Email("rm000000@fiap.com.br");
+        var otherEmail = new Email ("professor@alura.com.br");
+        var user = new User("Maria Silva", email, password);
+        var admin = new User("José Santos", otherEmail, password, UserRole.Admin);
 
         // Act
-        //user.ChangeRole(UserRole.Admin);
-        //admin.ChangeRole(UserRole.User);
+        user.ChangeRole(UserRole.Admin);
+        admin.ChangeRole(UserRole.User);
 
         // Assert
-        //Assert.Equal(user.Role, UserRole.Admin);
-        //Assert.Equal(admin.Role, UserRole.User);
-        Assert.Fail("Test not implemented");
+        Assert.Equal(UserRole.Admin, user.Role);
+        Assert.Equal(UserRole.User, admin.Role);
     }
 
     [Fact]
     public void ChageName_ModifyName_NameModified()
     {
         // Arrange
-        //User user = new User("Maria Siuva", "rm000000@fiap.com.br", "Senha@123");
+        var password = Password.Create("Senha@123", _hasher);
+        var email = new Email("rm000000@fiap.com.br");
+        var user = new User("Maria Siuva", email, password);
 
         // Act
-        //user.ChangeName("Maria Silva");
+        user.ChangeName("Maria Silva");
 
         // Assert
-        //Assert.Equal("Maria Silva", user.Name);
-        Assert.Fail("Test not implemented");
+        Assert.Equal("Maria Silva", user.Name);
     }
 
     [Fact]
     public void ChangePassword_ModifyPassword_PasswordlModified()
     {
         // Arrange
-        //User user = new User("Maria Silva", "rm000000@fiap.com.br", "Senha@123");
+        var password = Password.Create("Senha@123", _hasher);
+        var email = new Email("rm000000@fiap.com.br");
+        var newPassword = "Pa$$w0rd";
+        var user = new User("Maria Silva", email, password);
 
         // Act
-        //user.ChangePassword("Senha@123", "Pa$$w0rd");
+        user.ChangePassword(newPassword, _hasher);
 
         // Assert
-        //Assert.True(user.VerifyPassword("Pa$$w0rd"));
-        Assert.Fail("Test not implemented");
+        Assert.True(user.IsPasswordValid("Pa$$w0rd", _hasher));
     }
 
     [Fact]
     public void ChangeEmail_ModifyEMail_EmailModified()
     {
         // Arrange
-        //User user = new User("Maria Silva", "rm000000@fiap.com.br", "Senha@123");
+        var password = Password.Create("Senha@123", _hasher);
+        var email = new Email("rm000000@fiap.com.br");
+        var user = new User("Maria Silva", email, password);
 
         // Act
-        //user.ChangeEmail("professor@alura");
+        user.ChangeEmail("professor@alura.com.br");
 
         // Assert
-        //Assert.Equal("professor@alura", user.Email);
-        Assert.Fail("Test not implemented");
+        Assert.Equal("professor@alura.com.br", user.Email.Address);
+        
 
     }
 }

@@ -13,6 +13,8 @@ public record Email
         Address = address;
     }
 
+    private Email() { Address = null!; } // For EF Core
+
     private void ValidateDomain(string address)
     {
         string pattern = @"@(fiap\.com\.br|pm3\.com\.br|alura\.com\.br)$";
